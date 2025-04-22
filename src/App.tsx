@@ -7,7 +7,7 @@ import { useGameStore } from './store/gameStore';
 import { useMessageState } from './hooks/useMessageState';
 import { playSound } from './utils/audio';
 import { defaultGameConfig } from './config/gameConfig';
-import { saveFormSubmission } from './lib/supabase';
+import { saveFormSubmission, saveUser } from './lib/supabase';
 
 function App() {
   const gameState = useGameStore();
@@ -413,6 +413,17 @@ function App() {
               onClick={() => {
                 if (playerName.trim()) {
                   playSound('buttonClick');
+                  
+                  // Save user name to Supabase
+                  saveUser(playerName.trim())
+                    .then(({ data, error }) => {
+                      if (error) {
+                        console.error('Error saving user:', error);
+                      } else {
+                        console.log('User saved successfully:', data);
+                      }
+                    });
+                  
                   setShowNameInput(false);
                   setShowIntroduction(false);
                 } else {
