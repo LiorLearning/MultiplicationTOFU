@@ -284,7 +284,13 @@ function App() {
 
   const handleSubmitGameIdea = useCallback(() => {
     // Save form data to Supabase
-    saveFormSubmission(gameFormData)
+    const formDataWithUser = {
+      ...gameFormData,
+      user: playerName.trim()
+    };
+    
+    // Save both the form data and user information
+    saveFormSubmission(formDataWithUser)
       .then(({ data, error }) => {
         if (error) {
           console.error('Error saving form submission:', error);

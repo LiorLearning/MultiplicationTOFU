@@ -17,6 +17,7 @@ export type FormSubmission = {
 
 export async function saveFormSubmission(formData: Record<string, any>): Promise<{ data: FormSubmission | null; error: Error | null }> {
   try {
+    console.log('Saving form submission:', formData);
     const { data, error } = await supabase
       .from('form_submissions')
       .insert([{ form_data: formData, game: 'Multiplication_TOFU' }])
