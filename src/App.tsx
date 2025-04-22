@@ -13,7 +13,7 @@ function App() {
   const gameState = useGameStore();
   const [showIntroduction, setShowIntroduction] = useState(true);
   const [showNameInput, setShowNameInput] = useState(true);
-  const [showCreateGameForm, setShowCreateGameForm] = useState(true);
+  const [showCreateGameForm, setShowCreateGameForm] = useState(false);
   const [showMissPopup, setShowMissPopup] = useState(false);
   const [showGameOverPopup, setShowGameOverPopup] = useState(false);
   const [lastTarget, setLastTarget] = useState('');

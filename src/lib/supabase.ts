@@ -19,7 +19,24 @@ export async function saveFormSubmission(formData: Record<string, any>): Promise
   try {
     const { data, error } = await supabase
       .from('form_submissions')
-      .insert([{ form_data: formData }])
+      .insert([{ form_data: formData, game: 'Multiplication_TOFU' }])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return { data, error: null };
+  } catch (error) {
+    console.error('Error saving form submission:', error);
+    return { data: null, error: error as Error };
+  }
+}
+
+export async function saveUser(user: string): Promise<{ data: FormSubmission | null; error: Error | null }> {
+  try {
+    const { data, error } = await supabase
+      .from('tof_users')
+      .insert([{ name: user, game: 'Multiplication_TOFU' }])
       .select()
       .single();
 
