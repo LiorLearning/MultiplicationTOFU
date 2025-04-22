@@ -7,12 +7,13 @@ import { useGameStore } from './store/gameStore';
 import { useMessageState } from './hooks/useMessageState';
 import { playSound } from './utils/audio';
 import { defaultGameConfig } from './config/gameConfig';
+import { saveFormSubmission } from './lib/supabase';
 
 function App() {
   const gameState = useGameStore();
   const [showIntroduction, setShowIntroduction] = useState(true);
   const [showNameInput, setShowNameInput] = useState(true);
-  const [showCreateGameForm, setShowCreateGameForm] = useState(false);
+  const [showCreateGameForm, setShowCreateGameForm] = useState(true);
   const [showMissPopup, setShowMissPopup] = useState(false);
   const [showGameOverPopup, setShowGameOverPopup] = useState(false);
   const [lastTarget, setLastTarget] = useState('');
@@ -282,34 +283,41 @@ function App() {
   }, [gameState.level, initializeBoard]);
 
   const handleSubmitGameIdea = useCallback(() => {
-    // Here you would typically send the data to a Google Form
-    // For now, we'll just log it and close the form
-    console.log('Game idea submitted:', gameFormData);
-    
-    // Reset form data
-    setGameFormData({
-      hero: '',
-      villain: '',
-      gameplay: '',
-      setting: '',
-      mathTopic: '',
-      contactInfo: ''
-    });
-    
-    // Close the form
-    setShowCreateGameForm(false);
-    
-    // Show thank you message with popup
-    setMessage({
-      title: 'Thanks for Your Game Idea!',
-      text: "We'll turn your idea into an actual game and contact you to collaborate on building it!",
-      buttonText: 'Continue Playing',
-      isLevelUp: true, // This ensures the message will be shown
-      onClose: () => {
-        setMessage(null);
-        playSound('buttonClick');
-      }
-    });
+    // Save form data to Supabase
+    saveFormSubmission(gameFormData)
+      .then(({ data, error }) => {
+        if (error) {
+          console.error('Error saving form submission:', error);
+          // You could show an error message here
+        } else {
+          console.log('Game idea submitted successfully:', data);
+          
+          // Reset form data
+          setGameFormData({
+            hero: '',
+            villain: '',
+            gameplay: '',
+            setting: '',
+            mathTopic: '',
+            contactInfo: ''
+          });
+          
+          // Close the form
+          setShowCreateGameForm(false);
+          
+          // Show thank you message with popup
+          setMessage({
+            title: 'Thanks for Your Game Idea!',
+            text: "We've saved your idea and we'll turn it into an actual game. We'll contact you to collaborate on building it!",
+            buttonText: 'Continue Playing',
+            isLevelUp: true, // This ensures the message will be shown
+            onClose: () => {
+              setMessage(null);
+              playSound('buttonClick');
+            }
+          });
+        }
+      });
   }, [gameFormData, setMessage]);
 
   // Keyboard input handling
