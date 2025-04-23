@@ -15,6 +15,7 @@
     "howler": "^2.2.4",
     "lucide-react": "^0.344.0",
     "openai": "^4.28.0",
+    "posthog-js": "^1.236.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zustand": "^4.5.2"
